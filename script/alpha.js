@@ -1,47 +1,40 @@
-// function play(){
-//     const homeSection = document.getElementById('home-screen');
-//     homeSection.classList.add('hidden');
 
-//     const playGroundSection = document.getElementById('play-ground');
-//     playGroundSection.classList.remove('hidden');
-
-
-    
-// }
-function handleKeyboardKeyUpEvents(event){
+function handleKeyboardKeyUpEvents(event) {
     const playerPressed = event.key;
-    
+
+    if(playerPressed === 'Escape'){
+        gameOver();
+    }
+
 
     const currentAlphabetElement = document.getElementById('current-alphabet');
     const currentAlphabet = currentAlphabetElement.innerText;
     const expectedAlphabet = currentAlphabet.toLowerCase();
 
-    if(playerPressed === expectedAlphabet){
+    if (playerPressed === expectedAlphabet) {
 
-        const currentScoreElement = document.getElementById('current-score');
-        const currentScoreText = currentScoreElement.innerText;
-        const cuurentScore = parseInt(currentScoreText);
+        const currentScore = getTextElementValueById('current-score')
+        const updatedScore = currentScore + 1;
+        setTextElementValueById('current-score', updatedScore);
 
-        const newScore = cuurentScore + 1;
-
-        currentScoreElement.innerText = newScore;
+    
         continueGame();
         removeBackgroundColorById(expectedAlphabet);
     }
-    else{
-        const currentLifeElement = document.getElementById('current-life');
-        const currentLifeText = currentLifeElement.innerText;
-        const currentLife = parseInt(currentLifeText);
+    else {
+        const currentLife = getTextElementValueById('current-life')
+        const updatedlife = currentLife - 1;
+        setTextElementValueById('current-life', updatedlife);
 
-        const newLife = currentLife - 1;
-
-        currentLifeElement.innerText = newLife;
+        if(updatedlife == 0){
+            gameOver();
+        }
     }
 
 }
-document.addEventListener('keyup',handleKeyboardKeyUpEvents)
+document.addEventListener('keyup', handleKeyboardKeyUpEvents)
 
-function continueGame(){
+function continueGame() {
     const alphabet = getARandomAlphabet();
 
     const currentAlphabetElement = document.getElementById('current-alphabet');
@@ -50,8 +43,26 @@ function continueGame(){
     setBackgroundColorById(alphabet);
 }
 
-function play(){
+function play() {
     hideElementById('home-screen');
+    hideElementById('final-score');
     showElementById('play-ground');
+    
+
+    setTextElementValueById('current-life', 5);
+    setTextElementValueById('current-score', 0);
+
+
     continueGame()
+}
+
+function gameOver() {
+    hideElementById('play-ground');
+    showElementById('final-score');
+
+    const latScore = getTextElementValueById('current-score');
+    setTextElementValueById('last-score', latScore);
+
+    const currentAlphabet = getElementTextById('current-alphabet');
+    removeBackgroundColorById(currentAlphabet);
 }
